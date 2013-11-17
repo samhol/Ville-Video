@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../VilleVideoJavadoc.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/**<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * &lt;p&gt;&lt;b&gt;Copyright 2013 Juha Mäkilä and Sami Holck&lt;/b&gt;&lt;/p&gt;<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * &lt;p&gt;Licensed under the Apache License, Version 2.0 (the "License");<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * you may not use this file except in compliance with the License.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * You may obtain a copy of the License at&lt;/p&gt;<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     &lt;a href="http://www.apache.org/licenses/LICENSE-2.0"<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *     target="_new"&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * <a name="line.10"></a>
+<span class="sourceLineNo">011</span> * &lt;p&gt;Unless required by applicable law or agreed to in writing, software<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * See the License for the specific language governing permissions and<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * limitations under the License.&lt;/p&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package sph.vaadin.ui.videojs;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.vaadin.server.Sizeable;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.vaadin.ui.Alignment;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.vaadin.ui.CustomComponent;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.vaadin.ui.HorizontalLayout;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import com.vaadin.ui.VerticalLayout;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>/**<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * A container for &lt;b&gt;{@link sph.vaadin.ui.videojs.Videojs}&lt;/b&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * component and its basic controllers &lt;b&gt;{@link sph.vaadin.ui.videojs.VideojsSourceLoader}&lt;/b&gt;,<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * &lt;b&gt;{@link sph.vaadin.ui.videojs.VideojsSeekToController}&lt;/b&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * and &lt;b&gt;{@link sph.vaadin.ui.videojs.VideojsTimeJumper}&lt;/b&gt;.<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * <a name="line.30"></a>
+<span class="sourceLineNo">031</span> * &lt;p&gt;&lt;strong&gt;copyright &amp;copy; Ville-Video 2013&lt;/strong&gt;&lt;/p&gt;<a name="line.31"></a>
+<span class="sourceLineNo">032</span> *<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * @author  &lt;a href="mailto:sami.holck@gmail.com"&gt;Sami Holck&lt;/a&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * @author  Juha Mäkilä<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * @version 1.0<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * @since   11.10.2013<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * <a name="line.37"></a>
+<span class="sourceLineNo">038</span> */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>public class VideojsFrame extends CustomComponent {<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>        /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * version control in a Serializable class<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         */<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        private static final long serialVersionUID = 1832295496823246699L;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        /**<a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * the composition root for the VideoFrame component<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         */<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        private final VerticalLayout compositionRoot = new VerticalLayout();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        /**<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * the bottom container for the VideoFrame component<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        private final HorizontalLayout controlsLayout = new HorizontalLayout();<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * Video.js component<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        private final Videojs player = new Videojs();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        /**<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * the video source loader for the VideoFrame component<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        private final VideojsSourceLoader vjsSL;<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        private final VideojsTimeJumper vjsDC;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        private final VideojsSeekToController vjsSTC;<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>        /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * <a name="line.66"></a>
+<span class="sourceLineNo">067</span>         */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        public VideojsFrame() {<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                this("", "");<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        }<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span>        /**<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * <a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @param videoSrc the source path of the video file<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * @param mimeType the MIME type of the video<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public VideojsFrame(final String videoSrc, final String mimeType) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                this.vjsSL = new VideojsSourceLoader(this.player);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                this.vjsSL.setup();<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                this.vjsDC = new VideojsTimeJumper(this.player);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                this.vjsDC.setup();<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                this.vjsSTC = new VideojsSeekToController(this.player);<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                this.vjsSTC.setup();<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                this.doLayout();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                this.vjsSL.setVideoSource(videoSrc, mimeType);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        }<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        /**<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * Sets the path to the video stream and the MIME type of the video stream<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * <a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * @param videoSrc the source path of the video file<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * @param mimeType the MIME type of the video<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         */<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public void setVideoSource(final String videoSrc, final String mimeType) {<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                this.vjsSL.setVideoSource(videoSrc, mimeType);<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        }<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * Sets the visibility of the Loader component.<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * <a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * &lt;p&gt;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * Visible components are drawn in the user interface, while invisible ones<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * are not. The effect is not merely a cosmetic CSS change - no information<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * about an invisible component will be sent to the client. The effect is<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * thus the same as removing the component from its parent.<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * &lt;/p&gt;<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * <a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * &lt;p&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * A component is visible only if all of its parents are also visible. If a<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * component is explicitly set to be invisible, changes in the visibility of<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * its parents will not change the visibility of the component.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * &lt;/p&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * <a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param visible the boolean value specifying if the loader component<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         *            should be visible after the call or not.<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        public void setLoaderVisible(boolean visible) {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                this.vjsSL.setVisible(visible);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        }<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>        /**<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * Sets the visibility of the VideoStreamControls component.<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * <a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * &lt;p&gt;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * Visible components are drawn in the user interface, while invisible ones<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * are not. The effect is not merely a cosmetic CSS change - no information<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * about an invisible component will be sent to the client. The effect is<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * thus the same as removing the component from its parent.<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         * &lt;/p&gt;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * <a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * &lt;p&gt;<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * A component is visible only if all of its parents are also visible. If a<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * component is explicitly set to be invisible, changes in the visibility of<a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * its parents will not change the visibility of the component.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * &lt;/p&gt;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * <a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @param visible the boolean value specifying if the VideoStreamControls<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         *            component should be visible after the call or not.<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         */<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        public void setVideoStreamControlsVisible(boolean visible) {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                this.vjsDC.setVisible(visible);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                this.vjsSTC.setVisible(visible);<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        }<a name="line.143"></a>
+<span class="sourceLineNo">144</span><a name="line.144"></a>
+<span class="sourceLineNo">145</span>        /**<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * &lt;p&gt;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * Enables or disables the Loader. The user can not interact disabled<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * components, which are shown with a style that indicates the status,<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         * usually shaded in light gray color. Components are enabled by default.<a name="line.149"></a>
+<span class="sourceLineNo">150</span>         * &lt;/p&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         * <a name="line.151"></a>
+<span class="sourceLineNo">152</span>         * @param enabled a boolean value specifying if the Loader should be enabled<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         *            or not<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         */<a name="line.154"></a>
+<span class="sourceLineNo">155</span>        public void setLoaderEnabled(boolean enabled) {<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                this.vjsSL.setEnabled(enabled);<a name="line.156"></a>
+<span class="sourceLineNo">157</span>        }<a name="line.157"></a>
+<span class="sourceLineNo">158</span><a name="line.158"></a>
+<span class="sourceLineNo">159</span>        /**<a name="line.159"></a>
+<span class="sourceLineNo">160</span>         * &lt;p&gt;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         * Enables or disables the component. The user can not interact disabled<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         * components, which are shown with a style that indicates the status,<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * usually shaded in light gray color. Components are enabled by default.<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         * &lt;/p&gt;<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * <a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * @param enabled a boolean value specifying if the component should be<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         *            enabled or not<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         */<a name="line.168"></a>
+<span class="sourceLineNo">169</span>        public void setVideoStreamControlsEnabled(boolean enabled) {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                this.vjsDC.setEnabled(enabled);<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                this.vjsSTC.setEnabled(enabled);<a name="line.171"></a>
+<span class="sourceLineNo">172</span>        }<a name="line.172"></a>
+<span class="sourceLineNo">173</span><a name="line.173"></a>
+<span class="sourceLineNo">174</span>        /**<a name="line.174"></a>
+<span class="sourceLineNo">175</span>         * Returns the source path of the video stream.<a name="line.175"></a>
+<span class="sourceLineNo">176</span>         * <a name="line.176"></a>
+<span class="sourceLineNo">177</span>         * @return the source path of the video stream.<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         */<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        public String getVideoSrc() {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                return this.player.getVideoSrc();<a name="line.180"></a>
+<span class="sourceLineNo">181</span>        }<a name="line.181"></a>
+<span class="sourceLineNo">182</span><a name="line.182"></a>
+<span class="sourceLineNo">183</span>        /**<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         * Returns the MIME Type of the video stream.<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         * <a name="line.185"></a>
+<span class="sourceLineNo">186</span>         * @return the MIME type of the video stream.<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        public String getMimeType() {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                return this.player.getMimeType();<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        }<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>        private void doLayout() {<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                this.controlsLayout.setWidth(100, Sizeable.Unit.PERCENTAGE);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                this.controlsLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                this.controlsLayout.addComponents(this.vjsSL, this.vjsSTC, this.vjsDC);<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                //this.compositionRoot.addComponent(this.controlsLayout);<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                this.compositionRoot.addComponents(this.controlsLayout, this.player);<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                this.setCompositionRoot(this.compositionRoot);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        }<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>        /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * Returns the Video.js player component.<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * <a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * @return the Video.js player component.<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         */<a name="line.205"></a>
+<span class="sourceLineNo">206</span>        public Videojs getVideojsPlayer() {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                return this.player;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>        }<a name="line.208"></a>
+<span class="sourceLineNo">209</span>}<a name="line.209"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

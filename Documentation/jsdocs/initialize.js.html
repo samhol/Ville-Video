@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: videojs/javascript/initialize.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: videojs/javascript/initialize.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file initialize.js (UTF-8) Manages the configuration settings for the widget.
+ * 
+ * @author Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @requires jQuery 1.10.2
+ * @requires Video.js 4.1.0
+ * @requires Underscore.js 1.5.1
+ * @version 2.0
+ *
+ * Copyright (c) 2013 Sami Petteri Holck &lt;sami.holck@gmail.com>.
+ */
+
+/**
+ * @name videojs
+ * @version 4.1.0
+ * @class
+ * The open source HTML5 video player 
+ * See the {@link http://www.videojs.com|Video.js} for full details.
+ */
+
+/**
+ * @name jQuery
+ * @version 1.10.2
+ * @class 
+ * See the {@link http://jquery.com|jQuery} Library for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+
+/**
+ * @name fn
+ * @class 
+ * See the {@link http://jquery.com|jQuery} Library for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
+
+/**
+ * @name _
+ * @version 1.5.2
+ * @namespace
+ * @description Underscore provides 80-odd functions for various tasks.
+ * See the {@link http://underscorejs.org|Underscore.js} for full details.
+ */
+
+/**
+ * Holds all videoMcq functionality.
+ * 
+ * @author Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @name videoMcq
+ * @namespace
+ * @requires module:jQuery
+ * @requires module:videojs
+ * @requires module:_
+ */
+(function(videoMcq, $, undefined) {
+	"use strict";
+	/**
+	 * video.js player object
+	 * 
+	 * @private
+	 * @type {boolean}
+	 * @defaultvalue
+	 */
+
+	var player, videoJsId, eventCallback_, widget_, videoPlayer;
+	/**
+	 * Constructs a new VideoPlayer to control the video.js player
+	 * @memberOf videoMcq
+	 * @class
+	 * @classdesc VideoPlayer is a siple wrapper class for videojs player.
+	 * @constructor 
+	 * @param {string} vjsId the video id
+	 * @param {String} src the source of the video
+	 * @param {String} mime the MIME type of the video
+	 */
+	videoMcq.VideoPlayer = function (vjsId, src, mime) {
+		console.log("videoMcq.VideoPlayer(vjsId: " + vjsId + ", src: " + src + ", mime: " + mime + ")");
+		var that = this;
+		this.vjsId = vjsId;
+		this.src = src;
+		this.mime = mime;
+		this.initVideojs();
+		this.typeOf = "videoMcq.VideoPlayer";
+		this.pauseTimes = [];
+		this.nextPause = Number.MAX_VALUE;
+		this.masked = false;
+		this.player.ready(function () {
+			that.player.on("play", $.proxy(that.onPlayOrPause, that));
+			that.player.on("pause", $.proxy(that.onPlayOrPause, that));
+			that.player.on("timeupdate", $.proxy(that.onTimeupdate, that));
+		});
+	};
+	
+	
+
+	videoMcq.VideoPlayer.prototype = {
+
+		/**
+		 * Creates the {@link videojs} object from the video tag pointed by the
+		 * given domId.
+		 * 
+		 * @private
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @returns {VideoPlayer} the player object.
+		 */
+		initVideojs : function () {
+			console.log("VideoPlayer.initVideojs()");
+			videojs.options.flash.swf = "video-js.swf";
+			if (this.src !== "") {
+				if (this.mime === "youtube" || this.mime === "vimeo" || this.mime === "dailymotion") {
+					this.player = videojs(this.vjsId, {
+						'techOrder' : [ this.mime ],
+						'src' : this.src,
+						"loop" : true,
+						"autoplay" : false
+					});
+				} else {
+					this.player = videojs(this.vjsId, {}).src({
+						'type' : this.mime,
+						'src' : this.src
+					});
+				}
+			} else {
+				this.player = videojs(this.vjsId, {
+					controls : false
+				});
+			}
+			return this;
+		},
+
+		/**
+		 * Disposes the videojs player
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 */
+		dispose : function () {
+			this.player.dispose();
+		},
+		/**
+		 * Sets the next pause time.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @private
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		setNextPause : function () {
+			var that = this;
+			console.log("\t\tVideoPlayer.setNextPause()");
+			this.nextPause = _.find(this.pauseTimes, function (num) {
+				return num > that.player.currentTime();
+			});
+			if (isNaN(this.nextPause)) {
+				this.nextPause = Number.MAX_VALUE;
+				console.log("\t\t\tisNaN(this.nextPause) => this.nextPause = " + this.nextPause);
+			}
+			console.log("\t\t\tthis.nextPause = " + this.nextPause + ", pauseAts = " + this.pauseTimes);
+			return this;
+		},
+		/**
+		 * VideoPlayer's play event functionality
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @private
+		 */
+		onPlayOrPause : function () {
+			console.log("VideoPlayer.onPlayOrPause()");
+			this.setNextPause();
+		},
+		/**
+		 * VideoPlayer's timeupdate event functionality
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @private
+		 */
+		onTimeupdate : function () {
+			console.log("\t\tVideoPlayer.onTimeupdate()");
+			if (this.player.currentTime() >= this.nextPause) {
+				console.log("\t\t\tpauseAt happened:");
+				console.log("\t\t\t\tthis.player.currentTime() = " + this.player.currentTime());
+				console.log("\t\t\t\tthis.nextPause = " + this.nextPause);
+				this.player.pause();
+				this.setNextPause();
+			}
+		},
+		
+		/**
+		 * Returns the videojs player object.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @returns {videojs} the videojs player object.
+		 */
+		getVideojs: function () {
+			console.log("\t\tVideoPlayer.getVideojs()");
+			return this.player;
+		},
+
+		/**
+		 * Plays the video.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		play: function () {
+			console.log("VideoPlayer.play()");
+			this.player.ready(function () {
+				if (this.paused()) {
+					console.log("\t\tvideoMcq.play()");
+					this.play();
+				}
+			});
+		},
+
+		/**
+		 * Pauses the video.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		pause: function () {
+			console.log("VideoPlayer.pause()");
+			this.player.ready(function () {
+				if (!this.paused()) {
+					console.log("\t\tVideoPlayer.play()");
+					this.paused();
+				}
+			});
+		},
+
+		/**
+		 * Seeks to the given time in the video stream and pauses the playback.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @param {int|float} seekTo the time
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		seekTo: function (seekTo) {
+			console.log("\t\tVideoPlayer.seekTo(" + seekTo + ")");
+			this.player.ready(function () {
+				this.currentTime(seekTo).pause();
+			});
+			return this;
+		},
+
+
+		/**
+		 * Video.js plugin: Pauses the video at given time(s).
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @param {float|float[]} pauseTimes the times(s) in seconds where the video stream is paused.
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		pauseAt : function (pauseTimes) {
+			console.log("\t\tVideoPlayer.pauseAt(" + pauseTimes + ")");
+			if (!_.isArray(pauseTimes)) {
+				this.pauseTimes = [ pauseTimes ];
+			} else {
+				this.pauseTimes = pauseTimes;
+			}
+			return this;
+		},	
+		/**
+		 * Changes the width and height of the Video.js player to the supplied width and height.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @param {int} width The width in pixels
+		 * @param {int} height The height in pixels
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		setDimensions : function (width, height) {
+			console.log("\t\tVideoPlayer.setDimensions(width: " + width + "px, height: " + height + "px)");
+			this.player.ready(function () {
+				this.dimensions(width, height);
+			});
+			return this;
+		},
+
+		/**
+		 * Displays a mask over the Video.js player element.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @param {String} [label=null] Text message that will be displayed on top of the mask
+		 *            (optional).
+		 * @param {int} [delay=0] Delay in milliseconds before player element is masked
+		 *            (optional).
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		mask: function (label, delay) {
+			console.log("\t\tVideoPlayer.setMasked(label: " + label + ", delay:" + delay + ")");
+			$("#" + this.vjsId).mask(label, delay);
+			return this;
+		},
+
+		/**
+		 * Removes the mask from the Video.js player element.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		unmask: function () {
+			console.log("\t\tVideoPlayer.unmask()");
+			$("#" + this.vjsId).unmask();
+			return this;
+		},
+
+		/**
+		 * Enables / disables the video stream position seeking possibility from the user.
+		 * 
+		 * @memberOf videoMcq.VideoPlayer#
+		 * @public
+		 * @param {boolean} enabled the seeking possibility
+		 * @returns {videoMcq.VideoPlayer} the player object.
+		 */
+		seekingEnabled: function (enabled) {
+			console.log("\t\tVideoPlayer.seekingEnabled(enabled: " + enabled + ")");
+			if (!enabled) {
+				$('#' + this.vjsId + ' .vjs-progress-control').mask();
+			} else {
+				$('#' + this.vjsId + ' .vjs-progress-control').unmask();
+			}
+			return this;
+		}
+	};
+	
+	/**
+	 * Sets the Video.js event listeners for the server.
+	 * 
+	 * @private
+	 * @memberOf videoMcq
+	 * @param {videojs} videoPlayer Video.js player
+	 */
+	function setListeners(videoPlayer) {
+		console.log("setListeners()");
+		videoPlayer.ready(function () {
+			var player = this;
+			/**
+			 * Delegates the events to the corresponding callback function
+			 * 
+			 * @private
+			 * @memberOf setListeners
+			 * @param {Event}
+			 *            event delegated event
+			 */
+			function delegate(event) {
+				var eventName = event.type, currentTime = player.currentTime();
+				if (eventName === "durationchange") {
+					console.log("event: '" + eventName + "' fired at "
+							+ currentTime + "s, video duration: "
+							+ player.duration() + "s");
+					eventCallback_(eventName, currentTime, player.duration());
+				} else {
+					console.log("event: '" + eventName + "' fired at " + currentTime + "s");
+					eventCallback_(eventName, currentTime);
+				}
+			}
+			player.on("loadstart", delegate);
+			player.on("loadedmetadata", delegate);
+			player.on("loadeddata", delegate);
+			player.on("loadedalldata", delegate);
+			player.on("play", delegate);
+			player.on("pause", delegate);
+			player.on("timeupdate", delegate);
+			player.on("ended", delegate);
+			player.on("durationchange", delegate);
+			player.on("progress", delegate);
+			player.on("resize", delegate);
+			player.on("volumechange", delegate);
+			player.on("error", delegate);
+			player.on("fullscreenchange", delegate);
+		});
+	}
+
+	/**
+	 * Sets the Video.js event callback function for the client.
+	 * 
+	 * @public
+	 * @memberOf videoMcq
+	 * @param {Function} eventCallback callback function
+	 */
+	videoMcq.setEventCallback = function(eventCallback) {
+		eventCallback_ = eventCallback;
+	};
+
+	/**
+	 * Creates the video tag to the VideojsPlayer widget component.
+	 * 
+	 * @public
+	 * @memberOf videoMcq
+	 * @param {jQuery} widget widget component
+	 * @param {window.com_vaadin_ui_videojs_VideojsPlayer.getState} serverData state objects content
+	 * @return {videoMcq.VideoPlayer} an instance of VideoPlayer
+	 */
+	videoMcq.init = function (widget, serverData) {
+		var tagAttrs;
+		widget_ = widget;
+		videoJsId = serverData.videoJsId;
+		if (videoPlayer) {
+			console.log("-----------------------------");
+			console.log("\t\t\tdisposing videojs player: " + serverData.videoJsId);
+			videoPlayer.dispose();
+			console.log("old videojs player: " + videoPlayer + " is disposed");
+			console.log("-----------------------------");
+		}
+		console.log("\n********************");
+		console.log("videoMcq.init()");
+		console.log("\twidget: " + widget);
+		console.log("\tvideoSrc: " + serverData.videoSrc);
+		console.log("\tmimeType: " + serverData.mimetype);
+		tagAttrs = {
+			id : serverData.videoJsId,
+			'class' : "video-js vjs-default-skin",
+			controls : "",
+			poster : (serverData.poster) ? serverData.poster : null,
+			text : 'Your browser does not support the video tag!'
+		};
+		// Creates the video tag to the VideojsPlayer's widget frame
+		$('&lt;video/>', tagAttrs)
+			.attr("width", serverData.videoWidth)
+			.attr("height", serverData.videoHeight).appendTo(widget);
+		console.log("\ttag: '" + widget.clone().html() + "' inserted to the widget");
+		//player = initVideojs(serverData.videoJsId, serverData.videoSrc, serverData.mimetype);
+
+		videoPlayer = new videoMcq.VideoPlayer(serverData.videoJsId, serverData.videoSrc, serverData.mimetype);
+
+		setListeners(videoPlayer.getVideojs());
+		console.log("\n********************");
+		return videoPlayer;
+	};
+}(window.videoMcq = window.videoMcq || {}, jQuery));
+
+/**
+ * @namespace
+ * @name window
+ * @description supplemental window methods.
+ */
+
+/**
+ * RPC mechanism for communicating between client and server
+ * 
+ * @author Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @namespace
+ * @name sph_vaadin_ui_videojs_Videojs
+ * @memberOf window
+ */
+window.sph_vaadin_ui_videojs_Videojs = function () {
+	"use strict";
+	var that = this, 
+		eventCallback,
+		videoPlayer, 
+		videoSrc = this.getState().videoSrc, 
+		mimeType = this.getState().mimetype, 
+		playerWidth = this.getState().playerWidth, 
+		playerHeight = this.getState().playerHeight, 
+		seekToFlag = false, 
+		seekTo = 0, 
+		playCounter = 0, 
+		pauseCounter = 0,
+		pauseAt = [], 
+		isMasked = false, 
+		seekingEnabled = true;
+	console.log("\n---------------------");
+	console.log("sph_vaadin_ui_videojs_Videojs() {");
+	//videojsPlugins.registerAll();
+	videoPlayer = videoMcq.init($(this.getElement()), this.getState());
+	console.log("videoPlayer.typeOf:" + videoPlayer.typeOf);
+	/**
+	 * Callback method for getting Video.js events from {@link videoMcq}.
+	 * 
+	 * @memberOf window.sph_vaadin_ui_videojs_Videojs
+	 * @param {string} event the name of the event.
+	 * @param {float} time the time the event was fired.
+	 * @param {float} duration the time the event was fired.
+	 * @see {@link videoMcq.setEventCallback}
+	 */
+	eventCallback = function () {
+		// console.log("eventCallback arguments" + arguments);
+		// console.log("\teventCallback(event: " + event + ", time: " + time +
+		// "s)");
+		that.videoEventFired.apply(this, arguments);
+	};
+	videoMcq.setEventCallback(eventCallback);
+
+	/**
+	 * Method runs when the server attempts to update client values.
+	 * 
+	 * @function window.sph_vaadin_ui_videojs_Videojs~onStateChange
+	 */
+	this.onStateChange = function () {
+		// videoMcq.init($(this.getElement()), that.getState(), callback);
+		console.log("\tonStateChange() {");
+		if (videoSrc !== that.getState().videoSrc
+				|| mimeType !== that.getState().mimetype) {
+			videoSrc = that.getState().videoSrc;
+			mimeType = that.getState().mimetype;
+			videoPlayer = videoMcq.init($(that.getElement()), that.getState());
+		}
+		if (playCounter &lt; that.getState().playCounter) {
+			playCounter = that.getState().playCounter;
+			videoPlayer.play();
+		}
+		if (pauseCounter &lt; that.getState().pauseCounter) {
+			pauseCounter = that.getState().pauseCounter;
+			videoPlayer.pause();
+		}
+		if (seekToFlag !== that.getState().seekToFlag) {
+			seekToFlag = that.getState().seekToFlag;
+			videoPlayer.seekTo(that.getState().seekTo);
+		}
+		if (!_.isEqual(pauseAt, that.getState().pauseAt)) {
+			// console.log("that.getState().pauseAt" +
+			// pauseAt.compare(that.getState().pauseAt));
+			pauseAt = that.getState().pauseAt;
+			videoPlayer.pauseAt(that.getState().pauseAt);
+		}
+		if (playerWidth !== that.getState().playerWidth
+				|| playerHeight !== that.getState().playerHeight) {
+			playerWidth = that.getState().playerWidth;
+			playerHeight = that.getState().playerHeight;
+			videoPlayer.setDimensions(playerWidth, playerHeight);
+		}
+		if (isMasked !== that.getState().isMasked) {
+			isMasked = that.getState().isMasked;
+			if (isMasked) {
+				videoPlayer.mask(that.getState().maskLabel, that.getState().maskDelay);
+			} else {
+				videoPlayer.unmask();
+			}
+		}
+		if (seekingEnabled !== that.getState().seekingEnabled) {
+			seekingEnabled = that.getState().seekingEnabled;
+			videoPlayer.seekingEnabled(seekingEnabled);
+		}
+		// console.log("pauseat: " + that.getState().pauseAt);
+		console.log("\t}");
+	};
+	console.log("} sph_vaadin_ui_videojs_Videojs");
+	console.log("---------------------\n");
+
+	/**
+	 * Callback method for sending Video.js event to the server.
+	 * 
+	 * @function window.sph_vaadin_ui_videojs_Videojs~videoEventFired
+	 * @param {String} eventName the name of the Video.js event.
+	 * @param {float} time the time when the Video.js event was fired.
+	 * @param {float} [duration] the duration of the played video stream.
+	 */
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="sphSvg.SvgDots.html">SvgDots</a></li><li><a href="videojs.html">videojs</a></li><li><a href="videoMcq.VideoPlayer.html">VideoPlayer</a></li></ul><h3>Namespaces</h3><ul><li><a href="_.html">_</a></li><li><a href="videoMcq.html">videoMcq</a></li><li><a href="window.html">window</a></li><li><a href="window.sph_vaadin_ui_svg_SvgDots.html">sph_vaadin_ui_svg_SvgDots</a></li><li><a href="window.sph_vaadin_ui_videojs_Videojs.html">sph_vaadin_ui_videojs_Videojs</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Oct 21 2013 14:59:41 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

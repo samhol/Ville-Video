@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ville-Video Source: sph/vaadin/ui/svg/javascript/SvgDots.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Ville-Video</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="sphSvg.html">sphSvg</a>
+						</li>
+						
+						<li>
+							<a href="videoMcq.html">videoMcq</a>
+						</li>
+						
+						<li>
+							<a href="VideoMcqExecutor.html">VideoMcqExecutor</a>
+						</li>
+						
+						<li>
+							<a href="window.html">window</a>
+						</li>
+						
+						<li>
+							<a href="window.sph_vaadin_ui_svg_SvgDots.html">sph_vaadin_ui_svg_SvgDots</a>
+						</li>
+						
+						<li>
+							<a href="window.sph_vaadin_ui_videojs_Videojs.html">sph_vaadin_ui_videojs_Videojs</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="module-jQuery.html">jQuery</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="sphSvg.SvgDots.html">SvgDots</a>
+						</li>
+						
+						<li>
+							<a href="videoMcq.VideoPlayer.html">VideoPlayer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="external-videojs.html#event:pause">pause</a>
+						</li>
+						
+						<li>
+							<a href="external-videojs.html#event:play">play</a>
+						</li>
+						
+						<li>
+							<a href="external-videojs.html#event:resize">resize</a>
+						</li>
+						
+						<li>
+							<a href="external-videojs.html#event:timeupdate">timeupdate</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="external-_.html">_</a>
+						</li>
+						
+						<li>
+							<a href="external-DOMElement.html">DOMElement</a>
+						</li>
+						
+						<li>
+							<a href="external-FRaphael.html">FRaphael</a>
+						</li>
+						
+						<li>
+							<a href="fn.html">fn</a>
+						</li>
+						
+						<li>
+							<a href="external-Raphael.html">Raphael</a>
+						</li>
+						
+						<li>
+							<a href="external-videojs.html">videojs</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: sph/vaadin/ui/svg/javascript/SvgDots.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+ * @file Contains all the JavaScript functionality of the SvgDots clien side JavaScript application.
+ * @copyright Sami Holck
+ * @author    Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @version   1.01
+ */
+
+/**
+ * Raphael JavaScript library for SVG vector graphics.
+ * @external Raphael
+ * @version  2.1.2
+ * @see      {@link http://raphaeljs.com/ Raphael}
+ */
+
+/**
+ * FRaphael extension for Raphael.js to make it easier to work with Filter Effects.
+ * FRaphael is delivered with and licensed under the MIT license.
+ * @external FRaphael
+ * @author   Chris Scott &lt;chris.scott@factmint.com>
+ * @version  0.0.1
+ * @see      {@link https://github.com/chrismichaelscott/fraphael/ FRaphael}
+ */
+
+/**
+ * The built in DOMElement object.
+ * @external DOMElement
+ * @alias    bar
+ * @see      {@link https://developer.mozilla.org/en-US/docs/Web/API/element DOMElement}
+ */
+
+/**
+ * @namespace
+ * @name sphSvg
+ * @description Contains some SVG drawing tools. Uses {@link external:Raphael Raphael}
+ * JavaScript library.
+ * @author Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @author Sami Petteri Holck
+ */
+(function (sphSvg, undefined) {
+	"use strict";
+
+	/**
+	 * Constructs a new SvgDots object.
+	 *
+	 * @author    Sami Petteri Holck &lt;sami.holck@gmail.com>
+	 * @class
+	 * @constructor
+	 * @memberOf  sphSvg
+	 * @classdesc SvgDots draws an SVG image containing small dots using {@link external:Raphael| Raphael} JavaScript library.
+	 * @param     {external:DOMElement} target the target DOMElement Object where the SVG component is added.
+	 * @returns   {sphSvg.SvgDots} the SvgDots object.
+	 */
+	sphSvg.SvgDots = function (target) {
+		console.log("sphSvg.SvgDots(target: " + target + ")");
+		this.target = target;
+		this.circles = [];
+		this.paper = new Raphael(target, 700, 20);
+		this.typeOf = "sphSvg.SvgDots";
+		return this;
+	};
+
+	sphSvg.SvgDots.prototype = {
+
+		/**
+		 * @typedef  DotData
+		 * @type     {Object}
+		 * @property {boolean} clickable - the clickable state of the dot.
+		 * @property {string} color - the color of the dot.
+		 * @property {string} title - the title of the dot.
+		 */
+
+		/**
+		 * Draws the Dots to the SVG canvas.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {Array.&lt;DotData>} dots an Array of {@link DotData} objects.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 * @see      {@link external:Raphael Raphael}
+		 * @see      {@link external:FRaphael FRaphael}
+		 */
+		draw : function (dots) {
+			console.log("sphSvg.SvgDots.draw(dots: " + dots + ")");
+			this.dots = dots;
+			this.paper.clear();
+			var index = 0, y = 11, x = 0, rows = 1;
+			for (index; index &lt; this.dots.length; index++) {
+				if (index !== 0 && (index % 38) === 0) {
+					y = y + 17;
+					x = 0;
+					rows += 1;
+					this.paper.setSize(700, rows * 20);
+				}
+				x += 18;
+				console.log("dot: " + this.dots[index].color);
+				this.circles[index] = this.paper.circle(x, y, 6);
+				this.setDotTitle(index, this.dots[index].title);
+				this.circles[index].attr({fill: this.dots[index].color, stroke: "black", "stroke-width": 2, title: this.dots[index].title})
+					.emboss()
+					.shadow(2, 2, 2, 0.5, this.dots[index].color);
+				this.circles[index].data("index", index);
+				this.setDotClickable(index, this.dots[index].clickable);
+			}
+			return this;
+		},
+
+		/**
+		 * Replaces the dot located on the given index.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {Number} index the index of the target dot.
+		 * @param    {DotData} dot required dot data.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 * @see      {@link external:Raphael Raphael}
+		 */
+		replaceDot: function (index, dot) {
+			console.log("sphSvg.SvgDots.repaintDot(index: " + index + ", dotData: " + dot + ")");
+			this.circles[index].attr({fill: dot.color, title: dot.title});
+			return this;
+		},
+
+		/**
+		 * Changes the clickable state of the dot.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {Boolean} clickable a boolean value specifying whether the dot is clickable or not.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 */
+		setDotClickable: function (index, clickable) {
+			var that = this, clicked = function () {
+				that.callback("click", index);
+			};
+			if (clickable) {
+				this.circles[index].click(clicked);
+			} else {
+				this.circles[index].unclick(clicked);
+			}
+		},
+
+		/**
+		 * Sets the color of the dot located on the given index.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {Number} index the index of the target dot.
+		 * @param    {String} color the new color of the dot.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 */
+		setDotColor: function (index, color) {
+			console.log("sphSvg.SvgDots.setDotColor(index: " + index + ", color: " + color + ")");
+			this.circles[index].attr({fill: color});
+			return this;
+		},
+
+		/**
+		 * Sets the title of the dot located on the given index.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {Number} index the index of the target dot.
+		 * @param    {String} title the new title of the dot.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 */
+		setDotTitle: function (index, title) {
+			console.log("sphSvg.SvgDots.setDotTitle(index: " + index + ", title: " + title + ")");
+			this.circles[index].attr({title: title});
+			return this;
+		},
+
+		/**
+		 * Callback method for delegating SVG dot events from a {@link sphSvg.SvgDots} object.
+		 *
+		 * @callback dotEventCallback
+		 * @param    {String} event the name of the {@link external:Raphael Raphael} event.
+		 * @param    {Number} index the index of the SVG dot that triggered the event.
+		 */
+
+		/**
+		 * Sets the callback function for even delegation to other systems.
+		 *
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param    {dotEventCallback} callback the event callback function.
+		 * @returns  {sphSvg.SvgDots} the SvgDots object.
+		 */
+		setEventCallback: function (callback) {
+			console.log("sphSvg.SvgDots.setEventCallback(callback: " + callback + ")");
+			this.callback = callback;
+			return this;
+		}
+	};
+
+}(window.sphSvg = window.sphSvg || {}));
+
+/**
+ * @namespace
+ * @name window
+ * @description supplemental window methods.
+ */
+
+/**
+ * RPC mechanism for communicating between client and server
+ *
+ * @author    Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @copyright Sami Holck
+ * @namespace
+ * @name     sph_vaadin_ui_svg_SvgDots
+ * @memberOf window
+ */
+window.sph_vaadin_ui_svg_SvgDots = function () {
+	"use strict";
+	console.log("\n---------------------");
+	console.log("sph_vaadin_ui_svg_SvgDots() {");
+	var dotDrawer = new sphSvg.SvgDots(this.getElement()), dots = [];
+
+	dotDrawer.setEventCallback(this.delegateDotEvent);
+
+	/**
+	 * Method runs when the Vaadin server attempts to update the client values.
+	 *
+	 * @function window.sph_vaadin_ui_svg_SvgDots~onStateChange
+	 */
+	this.onStateChange = function () {
+		console.log("\tonStateChange() {\n");
+		if (!_.isEqual(dots, this.getState().dots)) {
+			console.log(dots);
+			dots = this.getState().dots;
+			dotDrawer.draw(dots);
+		}
+		console.log("\t}");
+	};
+
+	/**
+	 * Replaces the dot located on the given index.
+	 *
+	 * @function window.sph_vaadin_ui_svg_SvgDots~replaceDot
+	 * @param    {Number} index the index of the target dot.
+	 * @param    {DotData} dot required dot data.
+	 */
+	this.replaceDot = function (index, dot) {
+		dotDrawer.replaceDot(index, dot);
+	};
+
+	/**
+	 * Sets the color of the dot located on the given index.
+	 *
+	 * @function window.sph_vaadin_ui_svg_SvgDots~setDotColor
+	 * @param    {Number} index the index of the target dot.
+	 * @param    {String} color the new color of the dot.
+	 */
+	this.setDotColor = function (index, color) {
+		dotDrawer.setDotColor(index, color);
+	};
+
+	/**
+	 * Sets the title of the dot located on the given index.
+	 * @public
+	 * @function window.sph_vaadin_ui_svg_SvgDots~setDotTitle
+	 * @param    {Number} index the index of the target dot.
+	 * @param    {String} title the new title of the dot.
+	 */
+	this.setDotTitle = function (index, title) {
+		dotDrawer.setDotTitle(index, title);
+	};
+
+	/**
+	 * Changes the clickable state of the dot.
+	 * @public
+	 * @function window.sph_vaadin_ui_svg_SvgDots~setDotClickable
+	 * @param    {Number} index the index of the target dot.
+	 * @param    {boolean} clickable a boolean value specifying whether the dot is clickable or not.
+	 */
+	this.setDotClickable = function (index, clickable) {
+		dotDrawer.setDotTitle(index, clickable);
+	};
+	console.log("} sph_vaadin_ui_svg_SvgDots");
+	console.log("---------------------\n");
+	/**
+	 * Callback method for delegating SVG dot events from a {@link sphSvg.SvgDots} object to the Vaadin server.
+	 *
+	 * @function window.sph_vaadin_ui_svg_SvgDots~delegateDotEvent
+	 * @type     {dotEventCallback}
+	 * @param    {String} eventName the name of the {@link external:Raphael Raphael} event.
+	 * @param    {Number} index the index of the SVG dot that triggered the event.
+	 */
+};</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					<strong>Ville-Video</strong> gives a possibility to use various types of video streams as a part of the teaching process.
+					<br />
+					
+					
+		<span class="copyright">
+		<strong>Ville-Video</strong> Copyright © 2012-2013 Sami Holck and Juha Mäkilä.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.1</a>
+		on Sun Nov 17 2013 08:02:35 GMT+0200 (EET) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+	<script>
+		$( function () {
+			$('#main').localScroll({
+				offset: { top: 56 } //offset by the height of your header (give or take a few px, see what works for you)
+			});
+			$( "dt h4.name" ).each( function () {
+				var $this = $( this );
+				var icon = $( "<i/>" ).addClass( "icon-plus-sign" ).addClass( "pull-right" ).addClass( "icon-white" );
+				var dt = $this.parents( "dt" );
+				var children = dt.next( "dd" );
+
+				$this.append( icon ).css( {cursor : "pointer"} );
+				$this.addClass( "member-collapsed" ).addClass( "member" );
+
+				children.hide();
+				$this.toggle( function () {
+					icon.addClass( "icon-minus-sign" ).removeClass( "icon-plus-sign" ).removeClass( "icon-white" );
+					$this.addClass( "member-open" ).removeClass( "member-collapsed" );
+					children.slideDown();
+				}, function () {
+					icon.addClass( "icon-plus-sign" ).removeClass( "icon-minus-sign" ).addClass( "icon-white" );
+					$this.addClass( "member-collapsed" ).removeClass( "member-open" );
+					children.slideUp();
+				} );
+			} );
+		} );
+	</script>
+	
+
+</body>
+</html>

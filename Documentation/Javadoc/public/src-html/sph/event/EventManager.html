@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../VilleVideoJavadoc.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/**<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * &lt;p&gt;&lt;b&gt;Copyright 2013 Sami Holck&lt;/b&gt;&lt;/p&gt;<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * &lt;p&gt;Licensed under the Apache License, Version 2.0 (the "License");<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * you may not use this file except in compliance with the License.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * You may obtain a copy of the License at&lt;/p&gt;<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     &lt;a href="http://www.apache.org/licenses/LICENSE-2.0"<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *     target="_new"&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * <a name="line.10"></a>
+<span class="sourceLineNo">011</span> * &lt;p&gt;Unless required by applicable law or agreed to in writing, software<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * See the License for the specific language governing permissions and<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * limitations under the License.&lt;/p&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package sph.event;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>/**<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * Generic event manager interface. Events are of any type. Only the negotiating<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * classes needs to know about the events existence. It is transparent also to<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * the EventManager who only delegates the events.<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * <a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;p class="red"&gt;&lt;strong&gt;Note:&lt;/strong&gt; great care must be exercised if mutable<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * objects are used as events. The behavior of a map is not specified if the value<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * of an object is changed in a manner that affects equals comparisons while the<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * object is a key in the map.&lt;/p&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * &lt;p&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * A potential problem with string based events are that there might be name<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * conflicts. In a large system, one might consider prefixing the event names to<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * avoid conflicts. If this seems to become a problem, the system is probably<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * bad designed anyway; The number of different event types should be kept low.<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * &lt;p&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * The listener class must implement the {@link sph.event.EventListener} interface<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * which implies the {@link sph.event.EventListener#on(E event, S source, D data)}<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * method. The listener class registers itself in the<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * EventManager<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * by:<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * <a name="line.39"></a>
+<span class="sourceLineNo">040</span> * &lt;pre&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * EventManager e = new EventManager();<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * e.addListener(&amp;quot;EventName&amp;quot;, source);<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * &lt;/pre&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * <a name="line.44"></a>
+<span class="sourceLineNo">045</span> * The &lt;em&gt;source&lt;/em&gt; class of the event will call:<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * <a name="line.46"></a>
+<span class="sourceLineNo">047</span> * &lt;pre&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * e.callListeners(&amp;quot;EventName&amp;quot;, object, data);<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * &lt;/pre&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * and the EventManager will then call the {@link sph.event.EventListener#on()} method<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * of every listener.<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * &lt;p&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * The definition of &lt;em&gt;event&lt;/em&gt;, &lt;em&gt;object&lt;/em&gt; and &lt;em&gt;data&lt;/em&gt; is purely up to the<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * involved classes. Typically &lt;em&gt;object&lt;/em&gt; will be the source of the event<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * (the &lt;em&gt;created&lt;/em&gt; object for a "Create" event, the &lt;em&gt;deleted&lt;/em&gt;<a name="line.55"></a>
+<span class="sourceLineNo">056</span> * object for a "Delete" event and so forth.) The additional &lt;em&gt;data&lt;/em&gt; object<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * is for convenience only and will often be null.<a name="line.57"></a>
+<span class="sourceLineNo">058</span> *<a name="line.58"></a>
+<span class="sourceLineNo">059</span> * @author  &lt;a href="mailto:sami.holck@gmail.com"&gt;Sami Holck&lt;/a&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * @version 0.1<a name="line.60"></a>
+<span class="sourceLineNo">061</span> * @since   07.11.2013<a name="line.61"></a>
+<span class="sourceLineNo">062</span> * @param   &lt;E&gt; the parameterized event type.<a name="line.62"></a>
+<span class="sourceLineNo">063</span> * @param   &lt;S&gt; the parameterized type of the event source.<a name="line.63"></a>
+<span class="sourceLineNo">064</span> * @param   &lt;D&gt; the parameterized type of the event data.<a name="line.64"></a>
+<span class="sourceLineNo">065</span> * @param   &lt;L&gt; the parameterized type of the event listener.<a name="line.65"></a>
+<span class="sourceLineNo">066</span> */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>public interface EventManager&lt;E, S, D, L extends EventListener&lt;E, S, D&gt;&gt;  {<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>        /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * Add a listener to the manager.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * <a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @param event The event the listener will listen to.<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @param eventListener The event listener object itself.<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public void addListener(E event, L eventListener);<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * Remove listener from specific event.<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * <a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * @param event Event object to remove listener from.<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @param eventListener Listener to remove.<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         */<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        public void removeListener(E event, L eventListener);<a name="line.83"></a>
+<span class="sourceLineNo">084</span><a name="line.84"></a>
+<span class="sourceLineNo">085</span>        /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * Remove listener from all events it is registered by. Convenient way of<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * cleaning up an listener object being destroyed.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * <a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * @param eventListener Event listener to remove.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         */<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        public void removeListener(L eventListener);<a name="line.91"></a>
+<span class="sourceLineNo">092</span><a name="line.92"></a>
+<span class="sourceLineNo">093</span>        /**<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * Clears all EventListeners from the manager.<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         */<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        public void clear();<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * Calls listeners. The definition of &lt;em&gt;event&lt;/em&gt;, &lt;em&gt;source&lt;/em&gt; and &lt;em&gt;data&lt;/em&gt; is<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * purely up to the communicating classes.<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * <a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * @param event the event object.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * @param source Source of the event object (or null).<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * @param data Additional data of the event (or null).<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         */<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        public void callListeners(E event, S source, D data);<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>        /**<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * Calls listeners. Convenience front-end where the additional data parameter is null.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * The definition of &lt;em&gt;event&lt;/em&gt; and &lt;em&gt;source&lt;/em&gt; is purely up to the<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * communicating classes.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * <a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * @param event the event object.<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param source Source of the event object (or null).<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         */<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        public void callListeners(E event, S source);<a name="line.116"></a>
+<span class="sourceLineNo">117</span>}<a name="line.117"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

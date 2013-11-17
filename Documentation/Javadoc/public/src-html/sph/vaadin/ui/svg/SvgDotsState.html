@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../VilleVideoJavadoc.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/**<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * &lt;p&gt;&lt;b&gt;Copyright 2013 Juha Mäkilä and Sami Holck&lt;/b&gt;&lt;/p&gt;<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * &lt;p&gt;Licensed under the Apache License, Version 2.0 (the "License");<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * you may not use this file except in compliance with the License.<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * You may obtain a copy of the License at&lt;/p&gt;<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> *     &lt;a href="http://www.apache.org/licenses/LICENSE-2.0"<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *     target="_new"&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * <a name="line.10"></a>
+<span class="sourceLineNo">011</span> * &lt;p&gt;Unless required by applicable law or agreed to in writing, software<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * See the License for the specific language governing permissions and<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * limitations under the License.&lt;/p&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package sph.vaadin.ui.svg;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.ArrayList;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import com.vaadin.shared.ui.JavaScriptComponentState;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>/**<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;strong&gt;SvgDotsState&lt;/strong&gt; object is a shared state object for &lt;strong&gt;<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * {@link SvgDots}&lt;/strong&gt; component.<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * <a name="line.26"></a>
+<span class="sourceLineNo">027</span> * &lt;p&gt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * The basic communication from a server-side VideojsPlayer to its the<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * client-side widget counterpart is handled using a VideojsPlayerState. The<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * VideojsPlayerState is serialized transparently. VideojsPlayerState should be<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * considered read-only on the client-side, as VideojsPlayerState is not<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * serialized back to the server-side.<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * &lt;/p&gt;<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * <a name="line.34"></a>
+<span class="sourceLineNo">035</span> * &lt;p&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * Values in the Shared State and in RPC calls are converted between Java and<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * JavaScript using the following conventions:<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * &lt;/p&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * <a name="line.39"></a>
+<span class="sourceLineNo">040</span> * &lt;ul&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * &lt;li&gt;Primitive Java numbers (byte, char, int, long, float, double) and their<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * boxed types (Byte, Character, Integer, Long, Float, Double) are represented<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * by JavaScript numbers.&lt;/li&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * &lt;li&gt;The primitive Java boolean and the boxed Boolean are represented by<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * JavaScript booleans.&lt;/li&gt;<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * &lt;li&gt;Java Strings are represented by JavaScript strings.&lt;/li&gt;<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * &lt;li&gt;List, Set and all arrays in Java are represented by JavaScript arrays.&lt;/li&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * &lt;li&gt;Map&lt;string, ?=""&gt; in Java is represented by JavaScript object with fields<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * corresponding to the map keys.&lt;/string,&gt;&lt;/li&gt;<a name="line.49"></a>
+<span class="sourceLineNo">050</span> * &lt;li&gt;Any other Java Map is represented by a JavaScript array containing two<a name="line.50"></a>
+<span class="sourceLineNo">051</span> * arrays, the first contains the keys and the second contains the values in the<a name="line.51"></a>
+<span class="sourceLineNo">052</span> * same order.&lt;/li&gt;<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * &lt;li&gt;A Java Bean is represented by a JavaScript object with fields<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * corresponding to the bean's properties.&lt;/li&gt;<a name="line.54"></a>
+<span class="sourceLineNo">055</span> * &lt;li&gt;A Java Connector is represented by a JavaScript string containing the<a name="line.55"></a>
+<span class="sourceLineNo">056</span> * connector's id.&lt;/li&gt;<a name="line.56"></a>
+<span class="sourceLineNo">057</span> * &lt;li&gt;A pluggable serialization mechanism is provided for types not described<a name="line.57"></a>
+<span class="sourceLineNo">058</span> * here. Please refer to the documentation for specific types for serialization<a name="line.58"></a>
+<span class="sourceLineNo">059</span> * information.&lt;/li&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span> * &lt;/ul&gt;<a name="line.60"></a>
+<span class="sourceLineNo">061</span> * <a name="line.61"></a>
+<span class="sourceLineNo">062</span> * &lt;p&gt;&lt;strong&gt;copyright &amp;copy; Ville-Video 2013&lt;/strong&gt;&lt;/p&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span> *<a name="line.63"></a>
+<span class="sourceLineNo">064</span> * @author  &lt;a href="mailto:sami.holck@gmail.com"&gt;Sami Holck&lt;/a&gt;<a name="line.64"></a>
+<span class="sourceLineNo">065</span> * @author  Juha Mäkilä<a name="line.65"></a>
+<span class="sourceLineNo">066</span> * @version 0.1<a name="line.66"></a>
+<span class="sourceLineNo">067</span> * @since   19.10.2013<a name="line.67"></a>
+<span class="sourceLineNo">068</span> *<a name="line.68"></a>
+<span class="sourceLineNo">069</span> */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>public class SvgDotsState extends JavaScriptComponentState {<a name="line.70"></a>
+<span class="sourceLineNo">071</span><a name="line.71"></a>
+<span class="sourceLineNo">072</span>        private static final long serialVersionUID = -3111856093333159122L;<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        public ArrayList&lt;SvgDots.Dot&gt; dots;<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>}<a name="line.76"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: svg/javascript/sph.svg.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: svg/javascript/sph.svg.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>&lt;b>Copyright 2013 Juha M�kil� and Sami Holck&lt;/b>&lt;/p>
+ * 
+ * &lt;p>Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at&lt;/p>
+ * 
+ *     &lt;a href="http://www.apache.org/licenses/LICENSE-2.0" 
+ *     target="_new">http://www.apache.org/licenses/LICENSE-2.0&lt;/a>
+ * 
+ * &lt;p>Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.&lt;/p>
+ */
+;(function ( sphSvg, undefined ) {
+	"use strict";
+	//var colors = ["#ccc", "#f00", "#0c0"];
+	/**
+	 * Constructs a new SvgDots to draw an SVG image containing small dots.
+	 * @memberOf sphSvg
+	 * @class
+	 * @classdesc SvgDots draws an SVG image containing small dots.
+	 * @constructor
+	 *  
+	 * @param {string} targetId the DOM id of the target element.
+	 * @param {string[]} dots the source of the video.
+	 * @returns {sphSvg.SvgDots} the SvgDots object.
+	 */
+	sphSvg.SvgDots = function (targetId, dots) {
+		console.log("sphSvg.SvgDots(targetId: " + targetId + ", dots: " + dots + ")");
+		/** 
+		 * target id
+		 * @private 
+		 * */
+		this.targetId = targetId;
+		/** @private */
+		this.target = document.getElementById(targetId);
+		/** @private */
+		this.dots = dots;
+		/** @private */
+		this.circles = [];
+		/** @private */
+		this.paper = Raphael(this.target, 320, 200);
+		this.draw();
+		this.typeOf = "sphSvg.SvgDots";
+		return this;
+	};
+
+	sphSvg.SvgDots.prototype = {
+
+		/**
+		 * Does the drawing of the SVG image
+		 * 
+		 * @private
+		 * @memberOf sphSvg.SvgDots#
+		 * @returns {sphSvg.SvgDots} the SvgDots object.
+		 * @param {string} targetId the DOM id of the target element
+		 * @returns {sphSvg.SvgDots} the SvgDots object.
+		 */
+		draw : function () {
+			var index = 0;
+			console.log("sphSvg.SvgDots.draw()");
+			for (index; index &lt; this.dots.length; index++) {
+				this.drawCircle(index);
+			} 
+			return this;
+		}, 
+
+		/**
+		 * Draws the circle to the position of the given index
+		 * 
+		 * @private
+		 * @memberOf sphSvg.SvgDots#
+		 * @returns {sphSvg.SvgDots} the SvgDots object.
+		 */
+		drawCircle: function (index) {
+			var that = this;
+			this.circles[index] = this.paper.circle((10 + 20 * index), 14, 8);
+			this.circles[index].attr({fill: this.dots[index], stroke: "black", "stroke-width": 2, title: "daa"})
+				.emboss()
+				.shadow();
+			this.circles[index].data("index", index);
+			if (this.callback) {
+				this.circles[index].click(function () {
+					//alert("index: " + this.data("index"));
+					that.callback("click", this.data("index"));
+				});	
+			}
+			return this;
+		},
+
+		/**
+		 * Changes the color of the dot of the given index
+		 * 
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param {int} dotNumber the index of the target dot.
+		 * @param {string} dotColor the new color of the dot.
+		 * @returns {sphSvg.SvgDots} the SvgDots object.
+		 */
+		changeDotColor: function (dotNumber, dotColor) {
+			this.circles[dotNumber].attr({fill: dotColor});
+		},
+		
+		/**
+		 * 
+		 * @public
+		 * @memberOf sphSvg.SvgDots#
+		 * @param {Function} callback the event callback function.
+		 */
+		setEventCallback: function (callback) {
+			this.callback = callback;
+		}
+	};
+
+}(window.sphSvg = window.sphSvg || {})); 
+
+/**
+ * @namespace
+ * @name window
+ * @description supplemental window methods.
+ */
+
+/**
+ * RPC mechanism for communicating between client and server
+ * 
+ * @author Sami Petteri Holck &lt;sami.holck@gmail.com>
+ * @namespace
+ * @name sph_vaadin_ui_svg_SvgDots
+ * @memberOf window
+ */
+window.sph_vaadin_ui_svg_SvgDots = function () {
+	"use strict";
+	var that = this, 
+		eventCallback, 
+		domID = this.getState().domID,
+		dots = this.getState().dots,
+		dotDrawer = new sphSvg.SvgDots(domID, dots),
+		dotNumber = 0;
+		
+	console.log("\n---------------------");
+	console.log("sph_vaadin_ui_svg_SvgDots() {");
+	//videoPlayer = videoMcq.init($(this.getElement()), this.getState());
+	
+	/**
+	 * Callback method for getting Video.js events from {@link videoMcq}.
+	 * 
+	 * @memberOf window.sph_vaadin_ui_videojs_Videojs
+	 * @param {String} eventName the index of the clicked dot.
+	 * @param {int} dotIndex the index of the clicked dot.
+	 * @see {@link videoMcq.setEventCallback}
+	 */
+	eventCallback = function (eventName, dotIndex) {
+		console.log("eventCallback(" + eventName + ", " + dotIndex + ")");
+		// console.log("\teventCallback(event: " + event + ", time: " + time +
+		// "s)");
+		that.dotClicked(eventName, dotIndex);
+	};
+	dotDrawer.setEventCallback(eventCallback);
+	//videoMcq.setEventCallback(eventCallback);
+
+	/**
+	 * Method runs when the server attempts to update client values.
+	 * 
+	 * @function window.sph_vaadin_ui_svg_SvgDots~onStateChange
+	 */
+	this.onStateChange = function () {
+		console.log("\tonStateChange() {");
+		if (dotNumber !== this.getState().dotNumber) {
+			dotNumber = this.getState().dotNumber;
+			dotDrawer.changeDotColor(dotNumber, this.getState().dotColor);
+		}
+		console.log("\t}");
+	};
+	console.log("} sph_vaadin_ui_svg_SvgDots");
+	console.log("---------------------\n");
+
+	/**
+	 * Callback method for sending Video.js event to the server.
+	 * 
+	 * @function window.sph_vaadin_ui_svg_SvgDots~dotClicked
+	 * @param {String} eventName the name of the Video.js event.
+	 * @param {float} time the time when the Video.js event was fired.
+	 * @param {float} [duration] the duration of the played video stream.
+	 */
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="sphSvg.SvgDots.html">SvgDots</a></li><li><a href="videojs.html">videojs</a></li><li><a href="videoMcq.VideoPlayer.html">VideoPlayer</a></li></ul><h3>Namespaces</h3><ul><li><a href="_.html">_</a></li><li><a href="videoMcq.html">videoMcq</a></li><li><a href="window.html">window</a></li><li><a href="window.sph_vaadin_ui_svg_SvgDots.html">sph_vaadin_ui_svg_SvgDots</a></li><li><a href="window.sph_vaadin_ui_videojs_Videojs.html">sph_vaadin_ui_videojs_Videojs</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Mon Oct 21 2013 14:59:41 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

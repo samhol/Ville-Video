@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../VilleVideoJavadoc.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package sph.vaadin.ui;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.vaadin.server.ThemeResource;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.vaadin.ui.themes.Reindeer;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * Contains predefined constants pointing to the CSS class names and image resources.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * @author  &lt;a href="mailto:sami.holck@gmail.com"&gt;Sami Holck&lt;/a&gt;<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * @version 1.01<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * @since   30.10.2013<a name="line.10"></a>
+<span class="sourceLineNo">011</span> */<a name="line.11"></a>
+<span class="sourceLineNo">012</span>public class SPH_baseTheme {<a name="line.12"></a>
+<span class="sourceLineNo">013</span>        /**<a name="line.13"></a>
+<span class="sourceLineNo">014</span>         * CSS styles for a small blue Button.<a name="line.14"></a>
+<span class="sourceLineNo">015</span>         * <a name="line.15"></a>
+<span class="sourceLineNo">016</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; com.vaadin.ui.Button.addStyleName(SMALL_BLUE_BUTTON)&lt;/em&gt;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>         */<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        public static final String SMALL_BLUE_BUTTON = "v-button-default " + Reindeer.BUTTON_SMALL;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>        /**<a name="line.19"></a>
+<span class="sourceLineNo">020</span>         * CSS styles for a default small TextField.<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         * <a name="line.21"></a>
+<span class="sourceLineNo">022</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; com.vaadin.ui.Button.addStyleName(SMALL_BLUE_BUTTON)&lt;/em&gt;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>         */<a name="line.23"></a>
+<span class="sourceLineNo">024</span>        public static final String DEFAULT_TEXTFIELD = "v-textfield-default " + Reindeer.TEXTFIELD_SMALL;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        /**<a name="line.25"></a>
+<span class="sourceLineNo">026</span>         * Resource for delete icon.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>         * <a name="line.27"></a>
+<span class="sourceLineNo">028</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.DELETE_ICON)&lt;/em&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>         */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        public static final ThemeResource DELETE_ICON = new ThemeResource("icons/delete_16.png");<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        /**<a name="line.31"></a>
+<span class="sourceLineNo">032</span>         * Resource for plus icon.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         * <a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.ADD_ICON)&lt;/em&gt;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        public static final ThemeResource ADD_ICON = new ThemeResource("icons/add_16.png");<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        /**<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * Resource for save icon.<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         * <a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.SAVE_ICON)&lt;/em&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         */<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        public static final ThemeResource SAVE_ICON = new ThemeResource("icons/save_16.png");<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        /**<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         * Resource for cancel icon.<a name="line.44"></a>
+<span class="sourceLineNo">045</span>         * <a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.CANCEL_ICON)&lt;/em&gt;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         */<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        public static final ThemeResource CANCEL_ICON = new ThemeResource("icons/cancel_16.png");<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>        /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * Resource for edit icon.<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * <a name="line.52"></a>
+<span class="sourceLineNo">053</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.EDIT_ICON)&lt;/em&gt;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        public static final ThemeResource EDIT_ICON = new ThemeResource("icons/edit_16.png");<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * Resource for load icon.<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * <a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.FORWARD_ICON)&lt;/em&gt;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public static final ThemeResource LOAD_ICON = new ThemeResource("icons/load_16.png");<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * Resource for magnifying glass icon.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * <a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.FORWARD_ICON)&lt;/em&gt;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public static final ThemeResource MAGNIFIER_ICON = new ThemeResource("icons/search_16.png");<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        /**<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * Resource for forward icon.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * <a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.FORWARD_ICON)&lt;/em&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        public static final ThemeResource FORWARD_ICON = new ThemeResource("icons/forward_16.png");<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * Resource for rewind icon.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * <a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.REWIND_ICON)&lt;/em&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         */<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        public static final ThemeResource REWIND_ICON = new ThemeResource("icons/rewind_16.png");<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>        /**<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * Resource for round ok icon.<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * <a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.OK_ICON)&lt;/em&gt;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        public static final ThemeResource OK_ICON = new ThemeResource("icons/ok_16.png");<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * Resource for round 'not ok' icon.<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * <a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * &lt;strong class="Red"&gt;USAGE EXAMPLE:&lt;/strong&gt; &lt;em&gt;Button.addIcon(SPH_baseTheme.NOT_OK_ICON)&lt;/em&gt;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         */<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        public static final ThemeResource NOT_OK_ICON = new ThemeResource("icons/not_ok_16.png");<a name="line.92"></a>
+<span class="sourceLineNo">093</span><a name="line.93"></a>
+<span class="sourceLineNo">094</span>}<a name="line.94"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
